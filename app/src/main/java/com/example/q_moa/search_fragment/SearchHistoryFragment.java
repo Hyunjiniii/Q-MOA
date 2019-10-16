@@ -50,6 +50,9 @@ public class SearchHistoryFragment extends Fragment {
                     textView[i].setText(list.get(i));
                 } else {
                     int j = i % 5;
+                    if (i == list.size())
+                        break;
+                    textView[j].setVisibility(View.VISIBLE);
                     textView[j].setText(list.get(i));
                 }
             }

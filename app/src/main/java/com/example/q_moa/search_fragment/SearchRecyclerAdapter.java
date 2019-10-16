@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,19 +57,21 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
                 ArrayList<String> list = getStringArrayPref(context, "history_list");
                 if (list != null) {
                     for (int i = 0; i <= list.size(); i++) {
-                        if (list.size() != 0) {
-                            if (i == list.size()) {
-                                break;
-                            }
-                            if (!names.get(position).equals(list.get(i))) {
-                                list.add(names.get(position));
-                                setStringArrayPref(context, "history_list", list);
-                            }
-
+                        if (list.size() == 0) {
+                            list.add(names.get(position));
+                            setStringArrayPref(context, "history_list", list);
+                        }
+                        if (i == list.size()) {
+                            break;
+                        }
+                        if (!names.get(position).equals(list.get(i))) {
+                            list.add(names.get(position));
+                            setStringArrayPref(context, "history_list", list);
+                            Log.d("setArrayPrefData", names.get(position) + ", " + list.size());
+                            break;
                         }
                     }
                 }
-
             }
         });
     }
