@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".login.LoginActivity">
+
+    <ImageView
+        android:id="@+id/main_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/main_logo" />
+
+    <com.example.q_moa.login.login_custom.Custom_login_btn
+        android:id="@+id/btn_google_login"
+        style="@style/LoginButtonStyle"
+        android:layout_marginTop="50dp"
+        android:elevation="1dp"
+        app:bg="@color/white"
+        app:text="구글 로그인"
+        app:textColor="#000000" />
+
+    <com.example.q_moa.login.login_custom.Custom_login_btn
+        android:id="@+id/btn_facebook_login"
+        style="@style/LoginButtonStyle"
+        app:bg="@color/com_facebook_blue"
+        app:text="페이스북 로그인"
+        app:textColor="@color/white" />
+
+    <com.example.q_moa.login.login_custom.Custom_login_btn
+        android:id="@+id/btn_naver_login"
+        style="@style/LoginButtonStyle"
+        app:bg="@color/naver_color"
+        app:text="네이버 로그인"
+        app:textColor="@color/white" />
+
+    <com.example.q_moa.login.login_custom.Custom_login_btn
+        android:id="@+id/btn_kakao_login"
+        style="@style/LoginButtonStyle"
+        app:bg="@color/kakao_color"
+        app:text="카카오 로그인"
+        app:textColor="@color/white" />
+
+    <com.example.q_moa.login.login_custom.Custom_login_btn
+        android:id="@+id/btn_guest_login"
+        style="@style/LoginButtonStyle"
+        app:bg="@color/guest_color"
+        app:text="게스트 로그인"
+        app:textColor="@color/white"/>
+
+
+    <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+        android:id="@+id/naver_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <com.kakao.usermgmt.LoginButton
+        android:id="@+id/kakao_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+
+</LinearLayout>

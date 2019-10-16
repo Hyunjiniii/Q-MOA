@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Q-MOA</string>
+
+    <string name="facebook_app_id">1364245893726139</string>
+    <string name="fb_login_protocol_scheme">fb1364245893726139</string>
+
+    <string name="kakao_app_key">935a47b9dc3eeb30deee83afde91b9c2</string>
+
+
+
+    <string name="OAUTH_CLIENT_ID">x2QacVmlmnDk_mVmd_TH</string>
+    <string name="OAUTH_CLIENT_SECRET">wQLoRGeTAE</string>
+    <string name="OAUTH_CLIENT_NAME">네이버 로그인</string>
+
+
+    <string name="logout">Logout</string>
+    <string name="profile_picture">Profile Picture:</string>
+    <string name="display_name">Display Name:</string>
+    <string name="login_failed">Login failed.</string>
+    <string name="email_text">Email:</string>
+</resources>

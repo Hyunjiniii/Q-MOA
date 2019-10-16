@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#f8f8f8</color>
+    <color name="colorAccent">#5E5E5E</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#ffff</color>
+
+    <color name="appcolor">#5383e8</color>
+
+    <color name="lottie_color">#FFED4E</color>
+
+    <color name="point_color">#ff2e72</color>
+
+    <color name="naver_color">#1EC800</color>
+    <color name="kakao_color">#f7e600</color>
+    <color name="guest_color">#5383e8</color>
+</resources>
