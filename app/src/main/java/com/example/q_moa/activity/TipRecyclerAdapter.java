@@ -28,7 +28,7 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private List<TipItem> items;
     private Context context;
-    private String uid = firebaseUser.getUid();
+    private String uid;
     private String sub_name;
     private String series;
     private String name;
@@ -70,6 +70,8 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
         holder.tip_result.setText(item.getResult());
         holder.date.setText(time1);
 
+        if (firebaseUser != null)
+            uid = firebaseUser.getUid();
         if (uid != null) {
             firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(date).addValueEventListener(new ValueEventListener() {
                 @Override

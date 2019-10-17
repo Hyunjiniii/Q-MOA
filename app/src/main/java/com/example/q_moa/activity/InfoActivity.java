@@ -75,7 +75,9 @@ public class InfoActivity extends AppCompatActivity {
             series = certificate_name.substring(1, 3);
         }
 
-        uid = firebaseUser.getUid();  // 사용자 uid 받아옴
+        if (firebaseUser != null) {
+            uid = firebaseUser.getUid();  // 사용자 uid 받아옴
+        }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView = (RecyclerView) findViewById(R.id.info_tip_recyclerview);
@@ -107,7 +109,6 @@ public class InfoActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (items.size() != 0) {
                     Intent intent1 = new Intent(getApplicationContext(), TipMoreActivity.class);
-                    intent1.putExtra("FirebaseUid", uid);
                     intent1.putExtra("certificate", certificate_name);
                     intent1.putExtra("tip_size", tip_size);
                     startActivity(intent1);
@@ -122,13 +123,13 @@ public class InfoActivity extends AppCompatActivity {
         tip_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (uid.length() != 0) {
+                if (uid != null) {
                     Intent intent1 = new Intent(getApplicationContext(), TipActivity.class);
                     intent1.putExtra("FirebaseUid", uid);
                     intent1.putExtra("certificate", certificate_name);
                     startActivity(intent1);
                 } else {
-                    Toast.makeText(InfoActivity.this, "로그인 후 작성할 수 있습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -137,9 +138,14 @@ public class InfoActivity extends AppCompatActivity {
         unfavorite_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                favorite_btn.setVisibility(View.VISIBLE);
-                unfavorite_btn.setVisibility(View.GONE);
-                Toast.makeText(InfoActivity.this, "즐겨찾기에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                if (uid != null) {
+                    favorite_btn.setVisibility(View.VISIBLE);
+                    unfavorite_btn.setVisibility(View.GONE);
+                    Toast.makeText(InfoActivity.this, "즐겨찾기에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         favorite_btn.setOnClickListener(new View.OnClickListener() {
