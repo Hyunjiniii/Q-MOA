@@ -65,7 +65,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,onAuthStateChanged {
-//ㄴㄹㅇ
+
 
     private static final int RC_SIGN_IN = 1000;
     private static final String TAG = "LoginActivity";
@@ -211,6 +211,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("login", "guest");
                 editor.apply();
+
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
 

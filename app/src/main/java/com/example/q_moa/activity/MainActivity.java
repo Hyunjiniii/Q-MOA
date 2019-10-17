@@ -35,13 +35,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser user = mFirebaseAuth.getCurrentUser();
-    String stUid, stGuest, stPhoto,stname;
+    String stUid, stGuest = null, stPhoto, stname;
     private DatabaseReference myRef;
     ImageView main_nav_header_image;
     TextView main_nav_header_name;
@@ -61,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
         main_nav_header_image = findViewById(R.id.main_nav_header_image);
         main_nav_header_name = findViewById(R.id.main_nav_header_name);
-
 
         CardView cardView = (CardView) findViewById(R.id.cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -84,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         onClickNavIC();
-        setHeaderView();
-
     }
 
     private void onClickNavIC() {
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else {
-
+                setHeaderView("게스트 로그인", String.valueOf(R.drawable.btn_gust));
             }
         } else {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -145,12 +144,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     try {
-                         stPhoto = dataSnapshot.child("photo").getValue().toString();
-                         stname = dataSnapshot.child("name").getValue().toString();
+                        stPhoto = dataSnapshot.child("photo").getValue().toString();
+                        stname = dataSnapshot.child("name").getValue().toString();
                         Log.d("debug", "onDataChange: " + stname + stPhoto);
 
-                        main_nav_header_name.setText(stname);
-                        Glide.with(getApplicationContext()).load(stPhoto).into(main_nav_header_image);
+                        setHeaderView(stname, stPhoto);
+
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -165,12 +164,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setLogout(){
-        if(stUid == null){
+    public void setLogout() {
+        if (stUid == null) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
             stGuest = null;
-        }else {
+        } else {
             mFirebaseAuth.getInstance().signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setHeaderView() {
+    private void setHeaderView(String name, String photo) {
         final View headerView = navigationView.getHeaderView(0);
 
         // header layout 상태바 높이만큼 내려줌
@@ -193,9 +192,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 프로필 이미지 라운딩
+//        ImageView profileImage = (ImageView) headerView.findViewById(R.id.main_nav_header_image);
+//        profileImage.setBackground(new ShapeDrawable(new OvalShape()));
+//        profileImage.setClipToOutline(true);
         ImageView profileImage = (ImageView) headerView.findViewById(R.id.main_nav_header_image);
-        profileImage.setBackground(new ShapeDrawable(new OvalShape()));
-        profileImage.setClipToOutline(true);
+        Glide.with(getApplicationContext()).load(photo).into(profileImage);
+        TextView textView = headerView.findViewById(R.id.main_nav_header_name);
+        textView.setText(name);
+
     }
 
     @Override
