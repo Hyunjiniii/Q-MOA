@@ -2,6 +2,7 @@ package com.example.q_moa.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -63,7 +64,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,onAuthStateChanged {
 //ㄴㄹㅇ
 
     private static final int RC_SIGN_IN = 1000;
@@ -87,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     View login_view;
     DatabaseReference myRef;
     FirebaseUser user;
+    private FirebaseAuth.AuthStateListener mAuthLiestener;
     String name, email, userUid;
     Uri user_photo;
 
@@ -98,6 +100,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users");
+
+        user = mAuth.getCurrentUser();
 
         findViewById(R.id.btn_facebook_login).setOnClickListener(this);
         findViewById(R.id.btn_google_login).setOnClickListener(this);
@@ -120,6 +124,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         } catch (NoSuchAlgorithmException e) {
 
         }
+
+        mAuthLiestener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("Uid", user.getUid());
+                    editor.apply();
+                    System.out.println("loginuid : " + user.getUid());
+
+                } else {
+                    // User is signed out
+                }
+                // ...
+            }
+        };
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -150,6 +172,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             case R.id.btn_google_login:
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+
                 break;
             case R.id.btn_facebook_login:
                 LoginManager loginManager = LoginManager.getInstance();
@@ -184,6 +207,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 break;
 
             case R.id.btn_guest_login:
+                SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("login", "guest");
+                editor.apply();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
 
@@ -424,6 +451,31 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+    //계정 데이터 가져옴
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        user.getEmail();
+        user.getUid();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthLiestener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthLiestener != null)
+            mAuth.removeAuthStateListener(mAuthLiestener);
+        else {
+
+        }
+    }
+
 
 
 }

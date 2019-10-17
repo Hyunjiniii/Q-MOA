@@ -1,13 +1,17 @@
 package com.example.q_moa.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,13 +22,29 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.example.q_moa.R;
+import com.example.q_moa.login.LoginActivity;
 import com.example.q_moa.lottie_fragment.LottieActivity;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+
+    private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseUser user = mFirebaseAuth.getCurrentUser();
+    String stUid, stGuest, stPhoto,stname;
+    private DatabaseReference myRef;
+    ImageView main_nav_header_image;
+    TextView main_nav_header_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +59,11 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false);
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawerLayout);
 
-        CardView cardView = (CardView)findViewById(R.id.cardView);
+        main_nav_header_image = findViewById(R.id.main_nav_header_image);
+        main_nav_header_name = findViewById(R.id.main_nav_header_name);
+
+
+        CardView cardView = (CardView) findViewById(R.id.cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,8 +72,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        try {
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+            stUid = sharedPreferences.getString("Uid", "");
+            stGuest = sharedPreferences.getString("login", "");
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            myRef = database.getReference("users");
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
         onClickNavIC();
         setHeaderView();
+
     }
 
     private void onClickNavIC() {
@@ -80,11 +116,66 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.logout:
                         drawerLayout.closeDrawers();
                         menuItem.setChecked(false);
+                        setLogout();
+
                         break;
                 }
                 return true;
             }
         });
+    }
+
+    //현재 사용자 확인
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (user == null) {
+            if (stGuest == null) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+
+            }
+        } else {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference();
+
+            myRef.child("users").child(stUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    try {
+                         stPhoto = dataSnapshot.child("photo").getValue().toString();
+                         stname = dataSnapshot.child("name").getValue().toString();
+                        Log.d("debug", "onDataChange: " + stname + stPhoto);
+
+                        main_nav_header_name.setText(stname);
+                        Glide.with(getApplicationContext()).load(stPhoto).into(main_nav_header_image);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+    }
+
+    public void setLogout(){
+        if(stUid == null){
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+            stGuest = null;
+        }else {
+            mFirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+
     }
 
     private void setHeaderView() {

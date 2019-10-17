@@ -23,6 +23,7 @@
         android:elevation="1dp"
         app:bg="@color/white"
         app:text="구글 로그인"
+
         app:textColor="#000000" />
 
     <com.example.q_moa.login.login_custom.Custom_login_btn

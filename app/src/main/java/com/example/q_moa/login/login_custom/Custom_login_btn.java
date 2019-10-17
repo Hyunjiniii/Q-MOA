@@ -29,6 +29,12 @@ public class Custom_login_btn extends LinearLayout {
         getAttrs(attrs);
     }
 
+    public Custom_login_btn(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs);
+        initView();
+        getAttrs(attrs, defStyle);
+    }
+
 
     private void initView() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.custom_login_button, this, false);
@@ -43,6 +49,12 @@ public class Custom_login_btn extends LinearLayout {
         setTypeArray(typedArray);
     }
 
+    private void getAttrs(AttributeSet attrs, int defStyle) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Custom_login_btn, defStyle, 0);
+        setTypeArray(typedArray);
+    }
+
+
     private void setTypeArray(TypedArray typedArray) {
         int bg_resID = typedArray.getColor(R.styleable.Custom_login_btn_bg, 0);
         bg.setBackgroundColor(bg_resID);
@@ -53,5 +65,10 @@ public class Custom_login_btn extends LinearLayout {
         int textColor = typedArray.getColor(R.styleable.Custom_login_btn_textColor, 0);
         text.setTextColor(textColor);
     }
+
+    void setSymbol(int symbol_resID) {
+        symbol.setImageResource(symbol_resID);
+    }
+
 
 }

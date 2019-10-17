@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import com.example.q_moa.R;
+import com.example.q_moa.activity.MainActivity;
 import com.example.q_moa.login.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -99,11 +102,11 @@ public class LottieActivity extends AppCompatActivity {
         }
     }
 
-    private void case6(){
+    private void case6() {
         next_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LottieActivity.this, LoginActivity.class));
+                startActivity(new Intent(LottieActivity.this, MainActivity.class));
                 finish();
 
             }
