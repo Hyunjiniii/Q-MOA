@@ -64,11 +64,13 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
                         if (i == list.size()) {
                             break;
                         }
-                        if (!names.get(position).equals(list.get(i))) {
+
+                        if (names.get(position).equals(list.get(i))) {
+                            break;
+                        } else {
                             list.add(names.get(position));
                             setStringArrayPref(context, "history_list", list);
                             Log.d("setArrayPrefData", names.get(position) + ", " + list.size());
-                            break;
                         }
                     }
                 }
