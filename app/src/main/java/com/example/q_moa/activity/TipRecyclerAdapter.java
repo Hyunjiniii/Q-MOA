@@ -67,61 +67,65 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
 
         holder.nickname.setText(name);
         holder.contents.setText(contents);
+        holder.tip_result.setText(item.getResult());
         holder.date.setText(time1);
 
-        firebaseDatabase.child("Review").child(sub_name).child(series).child(date).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String slike = dataSnapshot.child("like").getValue().toString();
-                String sresult = dataSnapshot.child("result").getValue().toString();
-                like = Boolean.parseBoolean(slike);
-                result = Integer.parseInt(sresult);
+        if (uid != null) {
+            firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(date).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String slike = dataSnapshot.child("like").getValue().toString();
+                    String sresult = dataSnapshot.child("result").getValue().toString();
+                    like = Boolean.parseBoolean(slike);
+                    result = Integer.parseInt(sresult);
 
-                holder.like_button.setChecked(like);
-                holder.tip_result.setText(sresult);
+                    holder.like_button.setChecked(like);
+                    holder.tip_result.setText(sresult);
 
-                like = holder.like_button.isChecked();
-                holder.like_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        TipItem item = items.get(holder.getAdapterPosition());
-                        date = item.getDate();
-                        if (uid.length() != 0) {
+                    like = holder.like_button.isChecked();
+                    holder.like_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            TipItem item = items.get(holder.getAdapterPosition());
+                            date = item.getDate();
                             if (like) {
                                 result -= 1;
                                 TipItem item1 = new TipItem(name, contents, String.valueOf(result), date, false);
-                                firebaseDatabase.child("Review").child(sub_name).child(series).child(date).setValue(item1);
+                                firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(date).setValue(item1);
                                 like = item1.isLike();
                                 holder.like_button.setChecked(like);
                                 holder.tip_result.setText(item1.getResult());
                             } else if (!like) {
                                 result += 1;
                                 TipItem item1 = new TipItem(name, contents, String.valueOf(result), date, true);
-                                firebaseDatabase.child("Review").child(sub_name).child(series).child(date).setValue(item1);
+                                firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(date).setValue(item1);
                                 like = item1.isLike();
                                 holder.like_button.setChecked(like);
                                 holder.tip_result.setText(item1.getResult());
                             }
-                        } else {
-                            Toast.makeText(context, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
                         }
+                    });
 
-                    }
-                });
+                    if (holder.like_button.isChecked())
+                        holder.like_button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.like_on_ic));
+                    else
+                        holder.like_button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.like_off_ic));
 
-                if (holder.like_button.isChecked())
-                    holder.like_button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.like_on_ic));
-                else
-                    holder.like_button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.like_off_ic));
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
-
+                }
+            });
+        } else {
+            holder.like_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override

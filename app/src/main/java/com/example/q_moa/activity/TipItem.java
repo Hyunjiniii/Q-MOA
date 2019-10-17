@@ -11,6 +11,13 @@ public class TipItem {
 
     }
 
+    TipItem(String nickname, String contents, String result, String date) {
+        this.nickname = nickname;
+        this.contents = contents;
+        this.result = result;
+        this.date = date;
+    }
+
     TipItem(String nickname, String contents, String result, String date, boolean isLike) {
         this.nickname = nickname;
         this.contents = contents;

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.q_moa.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -76,7 +77,9 @@ public class TipActivity extends AppCompatActivity {
                 if (tip_input.length() != 0) {
                     contents = tip_input.getText().toString();
                     TipItem tipItem = new TipItem(nickname, contents, "0", formatDate, false);
-                    FirebaseDatabase.getInstance().getReference().child("Review").child(sub_name).child(certificate_name.substring(1, 3)).child(formatDate).setValue(tipItem);
+                    TipItem tipItem1 = new TipItem(nickname, contents, "0", formatDate);
+                    FirebaseDatabase.getInstance().getReference().child("UserReview").child(sub_name).child(certificate_name.substring(1, 3)).child(uid).child(formatDate).setValue(tipItem);
+                    FirebaseDatabase.getInstance().getReference().child("Review").child(sub_name).child(certificate_name.substring(1, 3)).child(formatDate).setValue(tipItem1);
                     finish();
                 } else {
                     Toast.makeText(TipActivity.this, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
