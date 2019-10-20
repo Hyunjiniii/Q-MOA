@@ -10,8 +10,7 @@
     <string name="OAUTH_CLIENT_ID">x2QacVmlmnDk_mVmd_TH</string>
     <string name="OAUTH_CLIENT_SECRET">wQLoRGeTAE</string>
     <string name="OAUTH_CLIENT_NAME">네이버 로그인</string>
-
-
+    
     <string name="logout">Logout</string>
     <string name="profile_picture">Profile Picture:</string>
     <string name="display_name">Display Name:</string>

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.q_moa.R;
 import com.example.q_moa.activity.MainActivity;
 import com.facebook.AccessToken;
@@ -64,7 +65,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,onAuthStateChanged {
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, onAuthStateChanged {
 
 
     private static final int RC_SIGN_IN = 1000;
@@ -83,7 +84,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private LoginButton kakao_login;
     private SessionCallback callback;
 
-
     Context context = LoginActivity.this;
     View login_view;
     DatabaseReference myRef;
@@ -91,6 +91,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth.AuthStateListener mAuthLiestener;
     String name, email, userUid;
     Uri user_photo;
+
+    Custom_login_btn btn_google, btn_naver, btn_kakao, btn_guest, btn_facebook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         findViewById(R.id.btn_kakao_login).setOnClickListener(this);
         findViewById(R.id.btn_guest_login).setOnClickListener(this);
         login_view = findViewById(R.id.login_activity);
+
+        init();
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -219,6 +223,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
+    public void init(){
+        btn_google = findViewById(R.id.btn_google_login);
+        btn_facebook = findViewById(R.id.btn_facebook_login);
+        btn_guest = findViewById(R.id.btn_guest_login);
+        btn_kakao = findViewById(R.id.btn_kakao_login);
+        btn_naver = findViewById(R.id.btn_naver_login);
+
+        btn_google.setBackgroundResource(R.drawable.btn_google);
+        btn_facebook.setBackgroundResource(R.drawable.btn_facebook);
+
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
@@ -318,6 +333,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected class naverProfileTask extends AsyncTask<Void, Void, JSONObject> {
 
         String token;
+
         naverProfileTask(String token) {
             this.token = token;
         }
@@ -402,7 +418,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 String photo = userProfile.getProfileImagePath();
 
                 Log.d(TAG, "onSuccess: " + " name : " + name + "  photo : " + photo);
-                showSnackbar(name,"카카오 로그인");
+                showSnackbar(name, "카카오 로그인");
             }
 
             @Override
@@ -414,8 +430,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
-    public void showSnackbar(String name, String message){
-        Snackbar.make(login_view, name+"님, "+message+"은 아직 준비 중입니다.", Snackbar.LENGTH_INDEFINITE)
+    public void showSnackbar(String name, String message) {
+        Snackbar.make(login_view, name + "님, " + message + "은 아직 준비 중입니다.", Snackbar.LENGTH_INDEFINITE)
                 .setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -476,7 +492,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         }
     }
-
 
 
 }
