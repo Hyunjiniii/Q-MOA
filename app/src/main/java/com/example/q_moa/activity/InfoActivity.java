@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,9 +36,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class InfoActivity extends AppCompatActivity {
     private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
@@ -85,6 +86,7 @@ public class InfoActivity extends AppCompatActivity {
 
         if (firebaseUser != null) {
             uid = firebaseUser.getUid();  // 사용자 uid 받아옴
+            BooleanFavorite();
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -146,27 +148,32 @@ public class InfoActivity extends AppCompatActivity {
         unfavorite_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (uid != null) {
+                if (uid != null) {
                 favorite_btn.setVisibility(View.VISIBLE);
                 unfavorite_btn.setVisibility(View.GONE);
 
-                Favorite_Item word = new Favorite_Item(sub_name,"test1","test2");
+                Favorite_Item word = new Favorite_Item(sub_name, series,"test1", "test2");
                 viewModel.insert(word);
+                setFavorite();
 
-//                } else {
-////                    Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
-////                }
+                } else {
+                    Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
+
+
         favorite_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 favorite_btn.setVisibility(View.GONE);
                 unfavorite_btn.setVisibility(View.VISIBLE);
 
-                Favorite_Item word = new Favorite_Item(sub_name,"test1","test2");
+                Favorite_Item word = new Favorite_Item(sub_name, series,"test1", "test2");
                 viewModel.delete(word);
+
+                deletFavorite();
 
             }
         });
@@ -179,13 +186,66 @@ public class InfoActivity extends AppCompatActivity {
         setTipList();
     }
 
+    private void setFavorite() {
+        Hashtable<String, Boolean> star = new Hashtable<>();
+        star.put(uid, true);
+
+        firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(series).child("star").setValue(star);
+    }
+
+    private void deletFavorite() {
+        final Query query = firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(series).child("star").child(uid);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                query.getRef().removeValue();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void BooleanFavorite() {
+        firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(series).child("star").child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    boolean star = (boolean) dataSnapshot.getValue();
+
+                    if (star == true){
+                        favorite_btn.setVisibility(View.VISIBLE);
+                        unfavorite_btn.setVisibility(View.GONE);
+                    }else {
+                        favorite_btn.setVisibility(View.GONE);
+                        unfavorite_btn.setVisibility(View.VISIBLE);
+                    }
+                } catch (NullPointerException e) {
+                    favorite_btn.setVisibility(View.GONE);
+                    unfavorite_btn.setVisibility(View.VISIBLE);
+
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     // 기관, 계열, 분류 받아온 데이터 TextView에 적용
-    private void setInfo(String mchild, final TextView textView) {
+    private void setInfo(final String mchild, final TextView textView) {
         firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(mchild).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 textView.setText(dataSnapshot.getValue().toString());
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

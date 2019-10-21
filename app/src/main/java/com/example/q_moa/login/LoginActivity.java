@@ -92,8 +92,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     String name, email, userUid;
     Uri user_photo;
 
-    Custom_login_btn btn_google, btn_naver, btn_kakao, btn_guest, btn_facebook;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,8 +109,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         findViewById(R.id.btn_kakao_login).setOnClickListener(this);
         findViewById(R.id.btn_guest_login).setOnClickListener(this);
         login_view = findViewById(R.id.login_activity);
-
-        init();
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -223,17 +219,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-    public void init(){
-        btn_google = findViewById(R.id.btn_google_login);
-        btn_facebook = findViewById(R.id.btn_facebook_login);
-        btn_guest = findViewById(R.id.btn_guest_login);
-        btn_kakao = findViewById(R.id.btn_kakao_login);
-        btn_naver = findViewById(R.id.btn_naver_login);
 
-        btn_google.setBackgroundResource(R.drawable.btn_google);
-        btn_facebook.setBackgroundResource(R.drawable.btn_facebook);
-
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
