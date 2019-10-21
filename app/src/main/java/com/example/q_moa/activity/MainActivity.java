@@ -26,6 +26,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.bumptech.glide.Glide;
 import com.example.q_moa.LocationActivity;
 import com.example.q_moa.R;
+import com.example.q_moa.favorites.FavoriteActivity;
 import com.example.q_moa.login.LoginActivity;
 import com.example.q_moa.lottie_fragment.LottieActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         break;
                     case R.id.favorites:
+                        startActivity(new Intent(MainActivity.this, FavoriteActivity.class));
                         drawerLayout.closeDrawers();
                         menuItem.setChecked(false);
                         break;

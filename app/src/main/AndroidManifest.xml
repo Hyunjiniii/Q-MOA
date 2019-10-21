@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LocationActivity"></activity>
-        <activity android:name=".activity.FavoriteActivity" />
+        <activity android:name=".favorites.FavoriteActivity" />
         <activity android:name=".activity.TipMoreActivity" />
         <activity android:name=".activity.TipActivity" />
         <activity android:name=".activity.InfoActivity" />

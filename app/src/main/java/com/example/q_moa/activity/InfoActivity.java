@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.q_moa.R;
+import com.example.q_moa.favorites.Room.FavoriteViewModel;
+import com.example.q_moa.favorites.Room.Favorite_Item;
 import com.example.q_moa.lottie_fragment.LottieActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +59,8 @@ public class InfoActivity extends AppCompatActivity {
     private String tip_size;
     private String series;
 
+    FavoriteViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +73,9 @@ public class InfoActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.navbar_ic);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
+
+        //favorite setting
+        viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
 
         if (intent.getExtras().getString("certificate") != null) {
             certificate_name = intent.getExtras().getString("certificate");  // 선택한 자격증 이름 받아옴
@@ -138,13 +146,16 @@ public class InfoActivity extends AppCompatActivity {
         unfavorite_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (uid != null) {
-                    favorite_btn.setVisibility(View.VISIBLE);
-                    unfavorite_btn.setVisibility(View.GONE);
-                    Toast.makeText(InfoActivity.this, "즐겨찾기에 추가되었습니다.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
-                }
+//                if (uid != null) {
+                favorite_btn.setVisibility(View.VISIBLE);
+                unfavorite_btn.setVisibility(View.GONE);
+
+                Favorite_Item word = new Favorite_Item(sub_name,"test1","test2");
+                viewModel.insert(word);
+
+//                } else {
+////                    Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
+////                }
 
             }
         });
@@ -153,7 +164,10 @@ public class InfoActivity extends AppCompatActivity {
             public void onClick(View view) {
                 favorite_btn.setVisibility(View.GONE);
                 unfavorite_btn.setVisibility(View.VISIBLE);
-                Toast.makeText(InfoActivity.this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT).show();
+
+                Favorite_Item word = new Favorite_Item(sub_name,"test1","test2");
+                viewModel.delete(word);
+
             }
         });
 
