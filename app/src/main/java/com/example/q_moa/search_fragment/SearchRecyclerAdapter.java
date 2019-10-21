@@ -60,6 +60,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
                         if (list.size() == 0) {
                             list.add(names.get(position));
                             setStringArrayPref(context, "history_list", list);
+                            break;
                         }
                         if (i == list.size()) {
                             break;
@@ -71,6 +72,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
                             list.add(names.get(position));
                             setStringArrayPref(context, "history_list", list);
                             Log.d("setArrayPrefData", names.get(position) + ", " + list.size());
+                            break;
                         }
                     }
                 }
