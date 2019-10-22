@@ -31,11 +31,8 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
     private String uid;
     private String sub_name;
     private String series;
-    private String name;
-    private String contents;
-    private String date;
-    private boolean like;
-    private int result;
+    private int mlike_result;
+    private int munlike_result;
 
     TipRecyclerAdapter(List<TipItem> items, Context context, String sub_name, String series) {
         this.items = items;
@@ -55,79 +52,64 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        TipItem item = items.get(holder.getAdapterPosition());
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+        final TipItem item = items.get(position);
 
-        name = item.getNickname();
-        contents = item.getContents();
-        date = item.getDate();
+        String time = item.getDate();
+        int idx = time.indexOf(" ");
+        final String time1 = time.substring(0, idx);
 
-        int idx = date.indexOf(" ");
-        final String time1 = date.substring(0, idx);
-
-        holder.nickname.setText(name);
-        holder.contents.setText(contents);
-        holder.tip_result.setText(item.getResult());
+        holder.nickname.setText(item.getNickname());
         holder.date.setText(time1);
+        holder.contents.setText(item.getContents());
+        holder.like_result.setText(item.getLike_result());
+        holder.unlike_result.setText(item.getUnlike_result());
+        holder.like_button.setChecked(Boolean.parseBoolean(item.getIsLike()));
+        holder.unlike_button.setChecked(Boolean.parseBoolean(item.getIsUnLike()));
+
+        mlike_result = Integer.parseInt(item.getLike_result());
+        munlike_result = Integer.parseInt(item.getUnlike_result());
 
         if (firebaseUser != null)
             uid = firebaseUser.getUid();
+
+        if (uid == null) {
+            holder.unlike_button.setEnabled(false);
+            holder.like_button.setEnabled(false);
+        }
+
+        setButton(holder, item);
+
         if (uid != null) {
-            firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(date).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String slike = dataSnapshot.child("like").getValue().toString();
-                    String sresult = dataSnapshot.child("result").getValue().toString();
-                    like = Boolean.parseBoolean(slike);
-                    result = Integer.parseInt(sresult);
-
-                    holder.like_button.setChecked(like);
-                    holder.tip_result.setText(sresult);
-
-                    like = holder.like_button.isChecked();
-                    holder.like_button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            TipItem item = items.get(holder.getAdapterPosition());
-                            date = item.getDate();
-                            if (like) {
-                                result -= 1;
-                                TipItem item1 = new TipItem(name, contents, String.valueOf(result), date, false);
-                                firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(date).setValue(item1);
-                                like = item1.isLike();
-                                holder.like_button.setChecked(like);
-                                holder.tip_result.setText(item1.getResult());
-                            } else if (!like) {
-                                result += 1;
-                                TipItem item1 = new TipItem(name, contents, String.valueOf(result), date, true);
-                                firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(date).setValue(item1);
-                                like = item1.isLike();
-                                holder.like_button.setChecked(like);
-                                holder.tip_result.setText(item1.getResult());
-                            }
-                        }
-                    });
-
-                    if (holder.like_button.isChecked())
-                        holder.like_button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.like_on_ic));
-                    else
-                        holder.like_button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.like_off_ic));
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        } else {
             holder.like_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
+                    mlike_result += 1;
+                    holder.like_button.setChecked(true);
+                    holder.like_result.setText(String.valueOf(mlike_result));
+                    TipItem item1 = new TipItem(item.getNickname(), item.getContents(), item.getDate(), String.valueOf(mlike_result), item.getUnlike_result(), "true", "false");
+                    TipItem item2 = new TipItem(item.getNickname(), item.getContents(), item.getDate(), String.valueOf(mlike_result), item.getUnlike_result());
+                    firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(item.getDate()).setValue(item1);
+                    firebaseDatabase.child("Review").child(sub_name).child(series).child(item.getDate()).setValue(item2);
+                    setButton(holder, item);
                 }
             });
+            holder.unlike_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    munlike_result += 1;
+                    holder.unlike_button.setChecked(true);
+                    holder.unlike_result.setText(String.valueOf(munlike_result));
+                    TipItem item1 = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), String.valueOf(munlike_result), "false", "true");
+                    TipItem item2 = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), String.valueOf(munlike_result));
+                    firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).child(item.getDate()).setValue(item1);
+                    firebaseDatabase.child("Review").child(sub_name).child(series).child(item.getDate()).setValue(item2);
+                    setButton(holder, item);
+                }
+            });
+
         }
+
     }
 
     @Override
@@ -138,18 +120,46 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView nickname;
         TextView contents;
-        TextView tip_result;
+        TextView like_result;
+        TextView unlike_result;
         TextView date;
         ToggleButton like_button;
+        ToggleButton unlike_button;
 
         MyViewHolder(@NonNull final View itemView) {
             super(itemView);
             nickname = (TextView) itemView.findViewById(R.id.tip_item_nickname);
             contents = (TextView) itemView.findViewById(R.id.tip_item_contents);
-            tip_result = (TextView) itemView.findViewById(R.id.tip_result_button);
+            like_result = (TextView) itemView.findViewById(R.id.tip_like_result);
+            unlike_result = (TextView) itemView.findViewById(R.id.tip_unlike_result);
             date = (TextView) itemView.findViewById(R.id.tip_item_date);
             like_button = (ToggleButton) itemView.findViewById(R.id.tip_like_button);
+            unlike_button = (ToggleButton) itemView.findViewById(R.id.tip_unlike_button);
+        }
+    }
 
+    private void setButton(MyViewHolder holder, TipItem item) {
+        if (holder.like_button.isChecked()) {
+            holder.like_button.setBackgroundDrawable(context.getDrawable(R.drawable.like_on_ic));
+        } else {
+            holder.like_button.setBackgroundDrawable(context.getDrawable(R.drawable.like_off_ic));
+        }
+        if (holder.unlike_button.isChecked()) {
+            holder.unlike_button.setBackgroundDrawable(context.getDrawable(R.drawable.unlike_on_ic));
+        } else {
+            holder.unlike_button.setBackgroundDrawable(context.getDrawable(R.drawable.unlike_off_ic));
+        }
+
+//        if (uid != null) {
+//            if (item.getIsLike().equals("true") || item.getIsUnLike().equals("true")) {
+//                holder.like_button.setEnabled(false);
+//                holder.unlike_button.setEnabled(false);
+//            }
+//        }
+
+        if (holder.like_button.isChecked() || holder.unlike_button.isChecked()) {
+            holder.like_button.setEnabled(false);
+            holder.unlike_button.setEnabled(false);
         }
     }
 

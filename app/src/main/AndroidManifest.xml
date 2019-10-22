@@ -19,7 +19,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".LocationActivity"></activity>
         <activity android:name=".favorites.FavoriteActivity" />
-        <activity android:name=".activity.TipMoreActivity" />
         <activity android:name=".activity.TipActivity" />
         <activity android:name=".activity.InfoActivity" />
         <activity android:name=".lottie_fragment.LottieActivity" />

@@ -114,22 +114,6 @@ public class InfoActivity extends AppCompatActivity {
             }
         });
 
-        // Tip 더보기 버튼 클릭 이벤트
-        TextView tip_more_button = (TextView) findViewById(R.id.info_to_tip_more);
-        tip_more_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (items.size() != 0) {
-                    Intent intent1 = new Intent(getApplicationContext(), TipMoreActivity.class);
-                    intent1.putExtra("certificate", certificate_name);
-                    intent1.putExtra("tip_size", tip_size);
-                    startActivity(intent1);
-                } else {
-                    Toast.makeText(InfoActivity.this, "작성된 Tip이 없습니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         // Tip 작성 버튼 클릭 이벤트
         Button tip_button = (Button) findViewById(R.id.write_tip_btn);
         tip_button.setOnClickListener(new View.OnClickListener() {
@@ -151,12 +135,12 @@ public class InfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (uid != null) {
-                favorite_btn.setVisibility(View.VISIBLE);
-                unfavorite_btn.setVisibility(View.GONE);
+                    favorite_btn.setVisibility(View.VISIBLE);
+                    unfavorite_btn.setVisibility(View.GONE);
 
-                Favorite_Item word = new Favorite_Item(sub_name, series,"test1", "test2");
-                viewModel.insert(word);
-                setFavorite();
+                    Favorite_Item word = new Favorite_Item(sub_name, series, "test1", "test2");
+                    viewModel.insert(word);
+                    setFavorite();
 
                 } else {
                     Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
@@ -172,7 +156,7 @@ public class InfoActivity extends AppCompatActivity {
                 favorite_btn.setVisibility(View.GONE);
                 unfavorite_btn.setVisibility(View.VISIBLE);
 
-                Favorite_Item word = new Favorite_Item(sub_name, series,"test1", "test2");
+                Favorite_Item word = new Favorite_Item(sub_name, series, "test1", "test2");
                 viewModel.delete(word);
 
                 deletFavorite();
@@ -215,10 +199,10 @@ public class InfoActivity extends AppCompatActivity {
                 try {
                     boolean star = (boolean) dataSnapshot.getValue();
 
-                    if (star == true){
+                    if (star == true) {
                         favorite_btn.setVisibility(View.VISIBLE);
                         unfavorite_btn.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         favorite_btn.setVisibility(View.GONE);
                         unfavorite_btn.setVisibility(View.VISIBLE);
                     }
@@ -254,59 +238,76 @@ public class InfoActivity extends AppCompatActivity {
         });
     }
 
-    // tip size 설정
-    private void getTipSize() {
-        String series = certificate_name.substring(1, 3);
-        firebaseDatabase.child("Review").child(sub_name).child(series).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                tip_size = String.valueOf(dataSnapshot.getChildrenCount());
-                tip_size_text.setVisibility(View.VISIBLE);
-                tip_size_text.setText("(" + tip_size + ")");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     // Tip RecyclerView에 넣어줌
     private void setTipList() {
         series = certificate_name.substring(1, 3);
-        firebaseDatabase.child("Review").child(sub_name).child(series).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                TipItem item = dataSnapshot.getValue(TipItem.class);
-                TipItem data = new TipItem(item.getNickname(), item.getContents(), item.getResult(), item.getDate(), item.isLike());
-                if (items.size() < 3)
+        if (uid == null) {
+            firebaseDatabase.child("Review").child(sub_name).child(series).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    TipItem item = dataSnapshot.getValue(TipItem.class);
+                    TipItem data = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), item.getUnlike_result());
                     items.add(data);
-                recyclerAdapter.notifyDataSetChanged();
-                getTipSize();
-                addDataView();
-            }
+                    recyclerAdapter.notifyDataSetChanged();
+                    tip_size_text.setVisibility(View.VISIBLE);
+                    tip_size_text.setText("(" + items.size() + ")");
+                    addDataView();
+                }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        } else {
+            firebaseDatabase.child("UserReview").child(sub_name).child(series).child(uid).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    TipItem item = dataSnapshot.getValue(TipItem.class);
+                    TipItem data = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), item.getUnlike_result(), item.getIsLike(), item.getIsUnLike());
+                    items.add(data);
+                    recyclerAdapter.notifyDataSetChanged();
+                    tip_size_text.setVisibility(View.VISIBLE);
+                    tip_size_text.setText("(" + items.size() + ")");
+                    addDataView();
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     // Tip 작성되면 recyclerview 활성화
