@@ -78,6 +78,8 @@ public class TipActivity extends AppCompatActivity {
                     contents = tip_input.getText().toString();
                     TipItem tipItem = new TipItem(nickname, contents, formatDate, "0", "0", "false", "false");
                     TipItem tipItem1 = new TipItem(nickname, contents, formatDate, "0", "0");
+                    TipItem tipItem2 = new TipItem(nickname, contents, formatDate, certificate_name);
+                    FirebaseDatabase.getInstance().getReference().child("MyReview").child(uid).child(formatDate).setValue(tipItem2);
                     FirebaseDatabase.getInstance().getReference().child("UserReview").child(sub_name).child(certificate_name.substring(1, 3)).child(uid).child(formatDate).setValue(tipItem);
                     FirebaseDatabase.getInstance().getReference().child("Review").child(sub_name).child(certificate_name.substring(1, 3)).child(formatDate).setValue(tipItem1);
                     finish();

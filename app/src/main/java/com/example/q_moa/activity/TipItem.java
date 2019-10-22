@@ -8,9 +8,17 @@ public class TipItem {
     private String isLike;
     private String isUnLike;
     private String unlike_result;
+    private String certificate;
 
     TipItem() {
 
+    }
+
+    TipItem(String nickname, String contents, String date, String certificate) {
+        this.nickname = nickname;
+        this.contents = contents;
+        this.date = date;
+        this.certificate = certificate;
     }
 
     TipItem(String nickname, String contents, String date, String like_result, String unlike_result) {
@@ -57,5 +65,9 @@ public class TipItem {
 
     public String getIsUnLike() {
         return isUnLike;
+    }
+
+    public String getCertificate() {
+        return certificate;
     }
 }

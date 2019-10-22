@@ -46,7 +46,6 @@ import java.util.Hashtable;
 public class InfoActivity extends AppCompatActivity {
     private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    private NavigationView navigationView;
     private String certificate_name;
     private String uid;
     private String sub_name;
@@ -57,7 +56,6 @@ public class InfoActivity extends AppCompatActivity {
     private ArrayList<TipItem> items = new ArrayList<>();
     private TextView tip_null_text;
     private TextView tip_size_text;
-    private String tip_size;
     private String series;
 
     FavoriteViewModel viewModel;

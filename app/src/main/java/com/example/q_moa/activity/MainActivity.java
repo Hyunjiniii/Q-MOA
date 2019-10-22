@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         break;
                     case R.id.mytip:
+                        startActivity(new Intent(MainActivity.this, MyTipActivity.class));
                         drawerLayout.closeDrawers();
                         menuItem.setChecked(false);
                         break;
