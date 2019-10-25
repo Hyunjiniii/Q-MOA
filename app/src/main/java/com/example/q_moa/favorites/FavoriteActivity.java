@@ -55,51 +55,51 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         });
 
-        init();
+//        init();
     }
 
-    public void init() {
-
-        viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
-
-        recyclerView = findViewById(R.id.favorite_Recyclverview);
-        adapter = new FavoriteListAdapter(this, viewModel);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        //observe : model의 LiveData를 관찰.
-        viewModel.getAllFavorite().observe(this, new Observer<List<Favorite_Item>>() {
-            @Override
-            public void onChanged(@Nullable final List<Favorite_Item> words) {
-                // Update the cached copy of the words in the adapter.
-                adapter.setWords(words);
-            }
-        });
-
-        ItemTouchHelper helper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0,
-                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView,
-                                          RecyclerView.ViewHolder viewHolder,
-                                          RecyclerView.ViewHolder target) {
-                        return false;
-                    }
-
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
-                                         int direction) {
-                        int position = viewHolder.getAdapterPosition();
-                        Favorite_Item myfavorite = adapter.getWordAtPosition(position);
-                        // Delete the word
-                        viewModel.delete(myfavorite);
-                        deleteFirebase(myfavorite.getFavorite_name(), myfavorite.getSeries());
-                    }
-                });
-
-        helper.attachToRecyclerView(recyclerView);
-
-    }
+//    public void init() {
+//
+//        viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
+//
+////        recyclerView = findViewById(R.id.favorite_Recyclverview);
+////        adapter = new FavoriteListAdapter(this, viewModel);
+////        recyclerView.setAdapter(adapter);
+////        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//
+//        //observe : model의 LiveData를 관찰.
+//        viewModel.getAllFavorite().observe(this, new Observer<List<Favorite_Item>>() {
+//            @Override
+//            public void onChanged(@Nullable final List<Favorite_Item> words) {
+//                // Update the cached copy of the words in the adapter.
+//                adapter.setWords(words);
+//            }
+//        });
+//
+//        ItemTouchHelper helper = new ItemTouchHelper(
+//                new ItemTouchHelper.SimpleCallback(0,
+//                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//                    @Override
+//                    public boolean onMove(RecyclerView recyclerView,
+//                                          RecyclerView.ViewHolder viewHolder,
+//                                          RecyclerView.ViewHolder target) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
+//                                         int direction) {
+//                        int position = viewHolder.getAdapterPosition();
+//                        Favorite_Item myfavorite = adapter.getWordAtPosition(position);
+//                        // Delete the word
+//                        viewModel.delete(myfavorite);
+//                        deleteFirebase(myfavorite.getFavorite_name(), myfavorite.getSeries());
+//                    }
+//                });
+//
+//        helper.attachToRecyclerView(recyclerView);
+//
+//    }
 
     private void deleteFirebase(String name, String series) {
         final Query query = firebaseDatabase.child("국가기술자격").child("기술").child(name).child(series).child("star").child(uid);

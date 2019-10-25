@@ -14,17 +14,31 @@ public class Favorite_Item {
 
     public String series;
 
+    @ColumnInfo(name = "favorite_time")
+    public String time;
+
     @ColumnInfo(name = "favorite_text1")
-    public String favorite_text1;
+    public String text1;
 
     @ColumnInfo(name = "favortie_text2")
-    public String favorite_text2;
+    public String text2;
 
-    public Favorite_Item(@NonNull String favorite_name, String series, String favorite_text1, String favorite_text2) {
+    Favorite_Item() {
+
+    }
+
+    public Favorite_Item(@NonNull String favorite_time, String favorite_text1, String favorite_text2) {
+        this.time = favorite_time;
+        this.text1 = favorite_text1;
+        this.text2 = favorite_text2;
+    }
+
+    public Favorite_Item(@NonNull String favorite_name, String series, String favorite_time, String favorite_text1, String favorite_text2) {
         this.favorite_name = favorite_name;
         this.series = series;
-        this.favorite_text1 = favorite_text1;
-        this.favorite_text2 = favorite_text2;
+        this.time = favorite_time;
+        this.text1 = favorite_text1;
+        this.text2 = favorite_text2;
     }
 
     @NonNull
@@ -36,14 +50,16 @@ public class Favorite_Item {
         return series;
     }
 
-    public String getFavorite_text1() {
-        return favorite_text1;
+    public String getText1() {
+        return text1;
     }
 
-    public String getFavorite_text2() {
-        return favorite_text2;
+    public String getText2() {
+        return text2;
     }
 
-
+    public String getTime() {
+        return time;
+    }
 }
 

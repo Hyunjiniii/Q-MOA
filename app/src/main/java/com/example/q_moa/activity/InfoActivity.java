@@ -2,34 +2,23 @@ package com.example.q_moa.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.q_moa.R;
+import com.example.q_moa.favorites.Room.FavoriteListAdapter;
 import com.example.q_moa.favorites.Room.FavoriteViewModel;
 import com.example.q_moa.favorites.Room.Favorite_Item;
-import com.example.q_moa.lottie_fragment.LottieActivity;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -37,11 +26,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 public class InfoActivity extends AppCompatActivity {
     private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
@@ -49,14 +36,15 @@ public class InfoActivity extends AppCompatActivity {
     private String certificate_name;
     private String uid;
     private String sub_name;
-    private ImageView unfavorite_btn;
-    private ImageView favorite_btn;
-    private RecyclerView recyclerView;
-    private TipRecyclerAdapter recyclerAdapter;
+    private RecyclerView TipRecyclerView;
+    private TipRecyclerAdapter tipRecyclerAdapter;
     private ArrayList<TipItem> items = new ArrayList<>();
     private TextView tip_null_text;
     private TextView tip_size_text;
     private String series;
+    private RecyclerView FavoriteRecyclerview;
+    private FavoriteListAdapter FavoriteListAdapter;
+    private ArrayList<Favorite_Item> favoriteItems = new ArrayList<>();
 
     FavoriteViewModel viewModel;
 
@@ -78,18 +66,23 @@ public class InfoActivity extends AppCompatActivity {
 
         if (firebaseUser != null) {
             uid = firebaseUser.getUid();  // 사용자 uid 받아옴
-            BooleanFavorite();
+//            BooleanFavorite();
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView = (RecyclerView) findViewById(R.id.info_tip_recyclerview);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerAdapter = new TipRecyclerAdapter(items, getApplicationContext(), sub_name, series);
-        recyclerView.setAdapter(recyclerAdapter);
+        TipRecyclerView = (RecyclerView) findViewById(R.id.info_tip_recyclerview);
+        TipRecyclerView.setLayoutManager(layoutManager);
+        TipRecyclerView.setHasFixedSize(true);
+        tipRecyclerAdapter = new TipRecyclerAdapter(items, getApplicationContext(), sub_name, series);
+        TipRecyclerView.setAdapter(tipRecyclerAdapter);
 
-        unfavorite_btn = (ImageView) findViewById(R.id.info_unfavorite_btn);
-        favorite_btn = (ImageView) findViewById(R.id.info_favorite_btn);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext());
+        FavoriteRecyclerview = (RecyclerView) findViewById(R.id.favorite_Recyclverview);
+        FavoriteRecyclerview.setLayoutManager(layoutManager1);
+        FavoriteRecyclerview.setHasFixedSize(true);
+        FavoriteListAdapter = new FavoriteListAdapter(favoriteItems, getApplicationContext(), viewModel, sub_name, series);
+        FavoriteRecyclerview.setAdapter(FavoriteListAdapter);
+
         tip_null_text = (TextView) findViewById(R.id.info_tip_null_text);
         tip_size_text = (TextView) findViewById(R.id.info_tip_size_text);
 
@@ -128,97 +121,39 @@ public class InfoActivity extends AppCompatActivity {
             }
         });
 
-        // 즐겨찾기 버튼 설정 및 해제
-        unfavorite_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (uid != null) {
-                    favorite_btn.setVisibility(View.VISIBLE);
-                    unfavorite_btn.setVisibility(View.GONE);
-
-                    Favorite_Item word = new Favorite_Item(sub_name, series, "test1", "test2");
-                    viewModel.insert(word);
-                    setFavorite();
-
-                } else {
-                    Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-
-        favorite_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                favorite_btn.setVisibility(View.GONE);
-                unfavorite_btn.setVisibility(View.VISIBLE);
-
-                Favorite_Item word = new Favorite_Item(sub_name, series, "test1", "test2");
-                viewModel.delete(word);
-
-                deletFavorite();
-
-            }
-        });
-
         setInfo("기관", agency_text);
         setInfo("계열", series_text);
         setInfo("분류", category_text);
         setTipList();
+        setFavoriteDate();
     }
 
-    private void setFavorite() {
-        Hashtable<String, Boolean> star = new Hashtable<>();
-        star.put(uid, true);
-
-        firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(series).child("star").setValue(star);
-    }
-
-    private void deletFavorite() {
-        final Query query = firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(series).child("star").child(uid);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                query.getRef().removeValue();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void BooleanFavorite() {
-        firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(series).child("star").child(uid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    boolean star = (boolean) dataSnapshot.getValue();
-
-                    if (star == true) {
-                        favorite_btn.setVisibility(View.VISIBLE);
-                        unfavorite_btn.setVisibility(View.GONE);
-                    } else {
-                        favorite_btn.setVisibility(View.GONE);
-                        unfavorite_btn.setVisibility(View.VISIBLE);
-                    }
-                } catch (NullPointerException e) {
-                    favorite_btn.setVisibility(View.GONE);
-                    unfavorite_btn.setVisibility(View.VISIBLE);
-
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
+//    private void BooleanFavorite() {
+//        firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(series).child("star").child(uid).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                try {
+//                    boolean star = (boolean) dataSnapshot.getValue();
+//
+//                    if (star == true) {
+//                        favorite_button.setChecked(true);
+//                    } else {
+//                        favorite_button.setChecked(false);
+//                    }
+//                } catch (NullPointerException e) {
+//                    favorite_button.setChecked(false);
+//
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//    }
 
     // 기관, 계열, 분류 받아온 데이터 TextView에 적용
     private void setInfo(final String mchild, final TextView textView) {
@@ -238,7 +173,6 @@ public class InfoActivity extends AppCompatActivity {
 
     // Tip RecyclerView에 넣어줌
     private void setTipList() {
-        series = certificate_name.substring(1, 3);
         if (uid == null) {
             firebaseDatabase.child("Review").child(sub_name).child(series).addChildEventListener(new ChildEventListener() {
                 @Override
@@ -246,7 +180,7 @@ public class InfoActivity extends AppCompatActivity {
                     TipItem item = dataSnapshot.getValue(TipItem.class);
                     TipItem data = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), item.getUnlike_result());
                     items.add(data);
-                    recyclerAdapter.notifyDataSetChanged();
+                    tipRecyclerAdapter.notifyDataSetChanged();
                     tip_size_text.setVisibility(View.VISIBLE);
                     tip_size_text.setText("(" + items.size() + ")");
                     addDataView();
@@ -279,7 +213,7 @@ public class InfoActivity extends AppCompatActivity {
                     TipItem item = dataSnapshot.getValue(TipItem.class);
                     TipItem data = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), item.getUnlike_result(), item.getIsLike(), item.getIsUnLike());
                     items.add(data);
-                    recyclerAdapter.notifyDataSetChanged();
+                    tipRecyclerAdapter.notifyDataSetChanged();
                     tip_size_text.setVisibility(View.VISIBLE);
                     tip_size_text.setText("(" + items.size() + ")");
                     addDataView();
@@ -308,13 +242,45 @@ public class InfoActivity extends AppCompatActivity {
         }
     }
 
+    private void setFavoriteDate() {
+        firebaseDatabase.child("날짜").child(series).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Favorite_Item item = dataSnapshot.getValue(Favorite_Item.class);
+                Favorite_Item data = new Favorite_Item(item.getTime(), item.getText2(), item.getText1());
+                favoriteItems.add(data);
+                FavoriteListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     // Tip 작성되면 recyclerview 활성화
     private void addDataView() {
         if (items.size() != 0) {
-            recyclerView.setVisibility(View.VISIBLE);
+            TipRecyclerView.setVisibility(View.VISIBLE);
             tip_null_text.setVisibility(View.GONE);
         } else {
-            recyclerView.setVisibility(View.GONE);
+            TipRecyclerView.setVisibility(View.GONE);
             tip_null_text.setVisibility(View.VISIBLE);
             tip_size_text.setVisibility(View.GONE);
         }
