@@ -19,6 +19,7 @@ import com.example.q_moa.favorites.Room.FavoriteViewModel;
 import com.example.q_moa.favorites.Room.Favorite_Item;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteActivity extends AppCompatActivity {
@@ -36,6 +38,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
     private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private ArrayList<Favorite_Item> favoriteItems = new ArrayList<>();
     String uid;
 
     @Override
@@ -55,54 +58,55 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         });
 
-//        init();
+        init();
+        setFavoriteDate();
     }
 
-//    public void init() {
-//
-//        viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
-//
-////        recyclerView = findViewById(R.id.favorite_Recyclverview);
-////        adapter = new FavoriteListAdapter(this, viewModel);
-////        recyclerView.setAdapter(adapter);
-////        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//
-//        //observe : model의 LiveData를 관찰.
-//        viewModel.getAllFavorite().observe(this, new Observer<List<Favorite_Item>>() {
-//            @Override
-//            public void onChanged(@Nullable final List<Favorite_Item> words) {
-//                // Update the cached copy of the words in the adapter.
-//                adapter.setWords(words);
-//            }
-//        });
-//
-//        ItemTouchHelper helper = new ItemTouchHelper(
-//                new ItemTouchHelper.SimpleCallback(0,
-//                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-//                    @Override
-//                    public boolean onMove(RecyclerView recyclerView,
-//                                          RecyclerView.ViewHolder viewHolder,
-//                                          RecyclerView.ViewHolder target) {
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
-//                                         int direction) {
-//                        int position = viewHolder.getAdapterPosition();
-//                        Favorite_Item myfavorite = adapter.getWordAtPosition(position);
-//                        // Delete the word
-//                        viewModel.delete(myfavorite);
-//                        deleteFirebase(myfavorite.getFavorite_name(), myfavorite.getSeries());
-//                    }
-//                });
-//
-//        helper.attachToRecyclerView(recyclerView);
-//
-//    }
+    public void init() {
 
-    private void deleteFirebase(String name, String series) {
-        final Query query = firebaseDatabase.child("국가기술자격").child("기술").child(name).child(series).child("star").child(uid);
+        viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
+
+        recyclerView = findViewById(R.id.favorite_Recyclverview);
+        adapter = new FavoriteListAdapter(this, viewModel, favoriteItems);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //observe : model의 LiveData를 관찰.
+        viewModel.getAllFavorite().observe(this, new Observer<List<Favorite_Item>>() {
+            @Override
+            public void onChanged(@Nullable final List<Favorite_Item> words) {
+                // Update the cached copy of the words in the adapter.
+                adapter.setWords(words);
+            }
+        });
+
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
+                                         int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        Favorite_Item myfavorite = adapter.getWordAtPosition(position);
+                        // Delete the word
+                        viewModel.delete(myfavorite);
+                        deleteFirebase(myfavorite.getFavorite_name());
+                    }
+                });
+
+        helper.attachToRecyclerView(recyclerView);
+
+    }
+
+    private void deleteFirebase(String name) {
+        final Query query = firebaseDatabase.child("UserFavorite").child(uid).child(name);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -114,7 +118,37 @@ public class FavoriteActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
+    private void setFavoriteDate() {
+        firebaseDatabase.child("UserFavorite").child(uid).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Favorite_Item item = dataSnapshot.getValue(Favorite_Item.class);
+                Favorite_Item data = new Favorite_Item(item.getFavorite_name(), item.getTime(), item.getText2(), item.getText1());
+                favoriteItems.add(data);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

@@ -12,8 +12,6 @@ public class Favorite_Item {
     @ColumnInfo(name = "favorite_name")
     public String favorite_name;
 
-    public String series;
-
     @ColumnInfo(name = "favorite_time")
     public String time;
 
@@ -33,9 +31,8 @@ public class Favorite_Item {
         this.text2 = favorite_text2;
     }
 
-    public Favorite_Item(@NonNull String favorite_name, String series, String favorite_time, String favorite_text1, String favorite_text2) {
+    public Favorite_Item(@NonNull String favorite_name, String favorite_time, String favorite_text1, String favorite_text2) {
         this.favorite_name = favorite_name;
-        this.series = series;
         this.time = favorite_time;
         this.text1 = favorite_text1;
         this.text2 = favorite_text2;
@@ -44,10 +41,6 @@ public class Favorite_Item {
     @NonNull
     public String getFavorite_name() {
         return favorite_name;
-    }
-
-    public String getSeries() {
-        return series;
     }
 
     public String getText1() {
@@ -61,5 +54,6 @@ public class Favorite_Item {
     public String getTime() {
         return time;
     }
+
 }
 
