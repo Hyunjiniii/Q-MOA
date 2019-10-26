@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -44,6 +45,7 @@ public class InfoActivity extends AppCompatActivity {
     private String series;
     private FavoriteListAdapter FavoriteListAdapter;
     private ArrayList<Favorite_Item> favoriteItems = new ArrayList<>();
+    private String time;
 
     FavoriteViewModel viewModel;
 
@@ -247,6 +249,7 @@ public class InfoActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Favorite_Item item = dataSnapshot.getValue(Favorite_Item.class);
                 Favorite_Item data = new Favorite_Item(item.getTime(), item.getText2(), item.getText1());
+                time = item.getTime();
                 favoriteItems.add(data);
                 FavoriteListAdapter.notifyDataSetChanged();
             }
@@ -283,5 +286,10 @@ public class InfoActivity extends AppCompatActivity {
             tip_null_text.setVisibility(View.VISIBLE);
             tip_size_text.setVisibility(View.GONE);
         }
+    }
+
+    public void getTime(String time) {
+        this.time = time;
+        Log.d("InfoTime", this.time);
     }
 }

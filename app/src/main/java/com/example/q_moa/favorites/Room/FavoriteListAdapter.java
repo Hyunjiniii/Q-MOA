@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.q_moa.R;
+import com.example.q_moa.activity.InfoActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -99,6 +100,8 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
             public void onClick(View view) {
                 if (uid != null) {
                     Favorite_Item item = new Favorite_Item("[" + series + "] " + sub_name, current.getTime(), current.getText1(), current.getText2());
+                    InfoActivity info = new InfoActivity();
+                    info.getTime(current.getTime());
                     holder.unfavorite_btn.setVisibility(View.GONE);
                     holder.favorite_btn.setVisibility(View.VISIBLE);
                     firebaseDatabase.child("UserFavorite").child(uid).child(series + sub_name + current.getTime()).setValue(item);
