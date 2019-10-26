@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.q_moa.R;
 import com.example.q_moa.favorites.Room.FavoriteListAdapter;
@@ -39,6 +41,9 @@ public class FavoriteActivity extends AppCompatActivity {
     private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private ArrayList<Favorite_Item> favoriteItems = new ArrayList<>();
+    private TextView bottomText;
+    private TextView nullText;
+
     String uid;
 
     @Override
@@ -50,6 +55,9 @@ public class FavoriteActivity extends AppCompatActivity {
             uid = firebaseUser.getUid();  // 사용자 uid 받아옴
         }
 
+        bottomText = (TextView) findViewById(R.id.bottomtext);
+        nullText = (TextView) findViewById(R.id.favorite_null_text);
+
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +67,6 @@ public class FavoriteActivity extends AppCompatActivity {
         });
 
         init();
-        setFavoriteDate();
     }
 
     public void init() {
@@ -70,6 +77,8 @@ public class FavoriteActivity extends AppCompatActivity {
         adapter = new FavoriteListAdapter(this, viewModel, favoriteItems);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        setFavoriteDate();
 
         //observe : model의 LiveData를 관찰.
         viewModel.getAllFavorite().observe(this, new Observer<List<Favorite_Item>>() {
@@ -98,6 +107,7 @@ public class FavoriteActivity extends AppCompatActivity {
                         // Delete the word
                         viewModel.delete(myfavorite);
                         deleteFirebase(myfavorite.getFavorite_name());
+                        addDataView();
                     }
                 });
 
@@ -127,7 +137,9 @@ public class FavoriteActivity extends AppCompatActivity {
                 Favorite_Item item = dataSnapshot.getValue(Favorite_Item.class);
                 Favorite_Item data = new Favorite_Item(item.getFavorite_name(), item.getTime(), item.getText2(), item.getText1());
                 favoriteItems.add(data);
+                Log.d("UserFavorite", item.getFavorite_name());
                 adapter.notifyDataSetChanged();
+                addDataView();
             }
 
             @Override
@@ -150,5 +162,17 @@ public class FavoriteActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void addDataView() {
+        if (favoriteItems.size() != 0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            bottomText.setVisibility(View.VISIBLE);
+            nullText.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            bottomText.setVisibility(View.GONE);
+            nullText.setVisibility(View.VISIBLE);
+        }
     }
 }

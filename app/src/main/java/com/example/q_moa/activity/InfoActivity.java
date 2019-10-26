@@ -42,7 +42,6 @@ public class InfoActivity extends AppCompatActivity {
     private TextView tip_null_text;
     private TextView tip_size_text;
     private String series;
-    private RecyclerView FavoriteRecyclerview;
     private FavoriteListAdapter FavoriteListAdapter;
     private ArrayList<Favorite_Item> favoriteItems = new ArrayList<>();
 
@@ -77,11 +76,11 @@ public class InfoActivity extends AppCompatActivity {
         TipRecyclerView.setAdapter(tipRecyclerAdapter);
 
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext());
-        FavoriteRecyclerview = (RecyclerView) findViewById(R.id.favorite_Recyclverview);
-        FavoriteRecyclerview.setLayoutManager(layoutManager1);
-        FavoriteRecyclerview.setHasFixedSize(true);
+        RecyclerView favoriteRecyclerview = (RecyclerView) findViewById(R.id.favorite_Recyclverview);
+        favoriteRecyclerview.setLayoutManager(layoutManager1);
+        favoriteRecyclerview.setHasFixedSize(true);
         FavoriteListAdapter = new FavoriteListAdapter(favoriteItems, getApplicationContext(), viewModel, sub_name, series);
-        FavoriteRecyclerview.setAdapter(FavoriteListAdapter);
+        favoriteRecyclerview.setAdapter(FavoriteListAdapter);
 
         tip_null_text = (TextView) findViewById(R.id.info_tip_null_text);
         tip_size_text = (TextView) findViewById(R.id.info_tip_size_text);

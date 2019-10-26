@@ -1,6 +1,7 @@
 package com.example.q_moa.favorites.Room;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,6 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
     private String uid;
     private String sub_name;
     private String series;
-    private String time;
 
     public FavoriteListAdapter(Context context, FavoriteViewModel viewModel, List<Favorite_Item> mfavorite) {
         this.context = context;
@@ -70,7 +70,6 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
 //            BooleanFavorite(holder);
         }
         final Favorite_Item current = mfavorite.get(position);
-        time = current.getTime();
 
         holder.time.setText("제 " + current.getTime());
         holder.text1.setText(current.getText1());
@@ -83,17 +82,13 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
             holder.name.setVisibility(View.GONE);
         }
 
-        if (uid != null) {
-
-        }
-
         holder.favorite_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (uid != null) {
                     holder.unfavorite_btn.setVisibility(View.VISIBLE);
                     holder.favorite_btn.setVisibility(View.GONE);
-                    deletFavorite();
+                    deletFavorite(current.getTime());
                 } else
                     Toast.makeText(context, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
             }
@@ -103,11 +98,11 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
             @Override
             public void onClick(View view) {
                 if (uid != null) {
-                    Favorite_Item item = new Favorite_Item("["+series+"] "+sub_name, current.getTime(), current.getText1(), current.getText2());
+                    Favorite_Item item = new Favorite_Item("[" + series + "] " + sub_name, current.getTime(), current.getText1(), current.getText2());
                     holder.unfavorite_btn.setVisibility(View.GONE);
                     holder.favorite_btn.setVisibility(View.VISIBLE);
-//                setFavorite();
-                    firebaseDatabase.child("UserFavorite").child(uid).child(series+sub_name).setValue(item);
+                    firebaseDatabase.child("UserFavorite").child(uid).child(series + sub_name + current.getTime()).setValue(item);
+                    viewModel.insert(item);
                 } else
                     Toast.makeText(context, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
             }
@@ -176,15 +171,15 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
 
     }
 
-    private void setFavorite() {
-        Hashtable<String, Boolean> star = new Hashtable<>();
-        star.put(uid, true);
+//    private void setFavorite() {
+//        Hashtable<String, Boolean> star = new Hashtable<>();
+//        star.put(uid, true);
+//
+//        firebaseDatabase.child("UserFavorite").child(uid).child(series + sub_name + time).setValue(star);
+//    }
 
-        firebaseDatabase.child("UserFavorite").child(uid).child(series+sub_name).setValue(star);
-    }
-
-    private void deletFavorite() {
-        final Query query = firebaseDatabase.child("UserFavorite").child(uid).child(series+sub_name);
+    private void deletFavorite(String time) {
+        final Query query = firebaseDatabase.child("UserFavorite").child(uid).child(series + sub_name + time);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
