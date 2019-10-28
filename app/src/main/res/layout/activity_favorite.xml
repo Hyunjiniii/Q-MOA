@@ -35,21 +35,20 @@
             android:textSize="18sp" />
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/favorite_null_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="설정한 즐겨찾기가 없습니다."
-        android:textColor="@color/black"
-        android:textSize="14sp" />
+<!--    <TextView-->
+<!--        android:id="@+id/favorite_null_text"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:text="설정한 즐겨찾기가 없습니다."-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="14sp" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorite_Recyclverview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_above="@id/bottomtext"
         android:layout_below="@id/main_toolbar"
         android:layout_margin="6dp"

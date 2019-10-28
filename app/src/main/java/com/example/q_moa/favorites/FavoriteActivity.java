@@ -39,24 +39,17 @@ public class FavoriteActivity extends AppCompatActivity {
     ImageButton btn_back;
 
     private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
-    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    private ArrayList<Favorite_Item> favoriteItems = new ArrayList<>();
     private TextView bottomText;
     private TextView nullText;
 
-    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
 
-        if (firebaseUser != null) {
-            uid = firebaseUser.getUid();  // 사용자 uid 받아옴
-        }
-
         bottomText = (TextView) findViewById(R.id.bottomtext);
-        nullText = (TextView) findViewById(R.id.favorite_null_text);
+//        nullText = (TextView) findViewById(R.id.favorite_null_text);
 
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -74,11 +67,9 @@ public class FavoriteActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
 
         recyclerView = findViewById(R.id.favorite_Recyclverview);
-        adapter = new FavoriteListAdapter(this, viewModel, favoriteItems);
+        adapter = new FavoriteListAdapter(this, viewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        setFavoriteDate();
 
         //observe : model의 LiveData를 관찰.
         viewModel.getAllFavorite().observe(this, new Observer<List<Favorite_Item>>() {
@@ -104,10 +95,9 @@ public class FavoriteActivity extends AppCompatActivity {
                                          int direction) {
                         int position = viewHolder.getAdapterPosition();
                         Favorite_Item myfavorite = adapter.getWordAtPosition(position);
+
                         // Delete the word
                         viewModel.delete(myfavorite);
-                        deleteFirebase(myfavorite.getFavorite_name());
-                        addDataView();
                     }
                 });
 
@@ -115,64 +105,4 @@ public class FavoriteActivity extends AppCompatActivity {
 
     }
 
-    private void deleteFirebase(String name) {
-        final Query query = firebaseDatabase.child("UserFavorite").child(uid).child(name);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                query.getRef().removeValue();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void setFavoriteDate() {
-        firebaseDatabase.child("UserFavorite").child(uid).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Favorite_Item item = dataSnapshot.getValue(Favorite_Item.class);
-                Favorite_Item data = new Favorite_Item(item.getFavorite_name(), item.getTime(), item.getText2(), item.getText1());
-                favoriteItems.add(data);
-                Log.d("UserFavorite", item.getFavorite_name());
-                adapter.notifyDataSetChanged();
-                addDataView();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void addDataView() {
-        if (favoriteItems.size() != 0) {
-            recyclerView.setVisibility(View.VISIBLE);
-            bottomText.setVisibility(View.VISIBLE);
-            nullText.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.GONE);
-            bottomText.setVisibility(View.GONE);
-            nullText.setVisibility(View.VISIBLE);
-        }
-    }
 }

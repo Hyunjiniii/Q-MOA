@@ -25,6 +25,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.q_moa.LocationActivity;
+import com.example.q_moa.LocationCheckActivity;
 import com.example.q_moa.R;
 import com.example.q_moa.favorites.FavoriteActivity;
 import com.example.q_moa.login.LoginActivity;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         btn_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LocationActivity.class));
+                startActivity(new Intent(MainActivity.this, LocationCheckActivity.class));
 
             }
         });

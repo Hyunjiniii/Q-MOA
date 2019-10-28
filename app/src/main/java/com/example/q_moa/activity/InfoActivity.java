@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.q_moa.InfoAdapter;
 import com.example.q_moa.R;
 import com.example.q_moa.favorites.Room.FavoriteListAdapter;
 import com.example.q_moa.favorites.Room.FavoriteViewModel;
@@ -43,7 +45,7 @@ public class InfoActivity extends AppCompatActivity {
     private TextView tip_null_text;
     private TextView tip_size_text;
     private String series;
-    private FavoriteListAdapter FavoriteListAdapter;
+    private InfoAdapter infoAdapter;
     private ArrayList<Favorite_Item> favoriteItems = new ArrayList<>();
     private String time;
 
@@ -81,8 +83,8 @@ public class InfoActivity extends AppCompatActivity {
         RecyclerView favoriteRecyclerview = (RecyclerView) findViewById(R.id.favorite_Recyclverview);
         favoriteRecyclerview.setLayoutManager(layoutManager1);
         favoriteRecyclerview.setHasFixedSize(true);
-        FavoriteListAdapter = new FavoriteListAdapter(favoriteItems, getApplicationContext(), viewModel, sub_name, series);
-        favoriteRecyclerview.setAdapter(FavoriteListAdapter);
+        infoAdapter = new InfoAdapter(getApplicationContext(),favoriteItems, viewModel, uid, sub_name, series);
+        favoriteRecyclerview.setAdapter(infoAdapter);
 
         tip_null_text = (TextView) findViewById(R.id.info_tip_null_text);
         tip_size_text = (TextView) findViewById(R.id.info_tip_size_text);
@@ -125,36 +127,9 @@ public class InfoActivity extends AppCompatActivity {
         setInfo("기관", agency_text);
         setInfo("계열", series_text);
         setInfo("분류", category_text);
-        setTipList();
         setFavoriteDate();
+        setTipList();
     }
-
-//    private void BooleanFavorite() {
-//        firebaseDatabase.child("국가기술자격").child("기술").child(sub_name).child(series).child("star").child(uid).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                try {
-//                    boolean star = (boolean) dataSnapshot.getValue();
-//
-//                    if (star == true) {
-//                        favorite_button.setChecked(true);
-//                    } else {
-//                        favorite_button.setChecked(false);
-//                    }
-//                } catch (NullPointerException e) {
-//                    favorite_button.setChecked(false);
-//
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//    }
 
     // 기관, 계열, 분류 받아온 데이터 TextView에 적용
     private void setInfo(final String mchild, final TextView textView) {
@@ -251,7 +226,7 @@ public class InfoActivity extends AppCompatActivity {
                 Favorite_Item data = new Favorite_Item(item.getTime(), item.getText2(), item.getText1());
                 time = item.getTime();
                 favoriteItems.add(data);
-                FavoriteListAdapter.notifyDataSetChanged();
+                infoAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -288,8 +263,5 @@ public class InfoActivity extends AppCompatActivity {
         }
     }
 
-    public void getTime(String time) {
-        this.time = time;
-        Log.d("InfoTime", this.time);
-    }
+
 }

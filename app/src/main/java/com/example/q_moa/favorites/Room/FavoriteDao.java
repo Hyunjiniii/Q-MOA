@@ -18,4 +18,5 @@ public interface FavoriteDao {
     @Delete
     void delete(Favorite_Item favorite_item);
 
+
 }
