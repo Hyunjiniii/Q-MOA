@@ -32,7 +32,7 @@ public class Favorite_Item {
     }
 
     public Favorite_Item(@NonNull String favorite_name, String series, String time, String favorite_text1, String favorite_text2) {
-        this.favorite_name = "제 "+time+ " "+favorite_name+" "+series;
+        this.favorite_name = "제 "+time+ ""+favorite_name+" "+series;
         this.time = time;
         this.text1 = favorite_text1;
         this.text2 = favorite_text2;

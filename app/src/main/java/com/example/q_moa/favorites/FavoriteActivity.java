@@ -49,7 +49,7 @@ public class FavoriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorite);
 
         bottomText = (TextView) findViewById(R.id.bottomtext);
-//        nullText = (TextView) findViewById(R.id.favorite_null_text);
+        nullText = (TextView) findViewById(R.id.favorite_null_text);
 
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +70,15 @@ public class FavoriteActivity extends AppCompatActivity {
         adapter = new FavoriteListAdapter(this, viewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        int position = adapter.getItemCount();
+//        if(position == 0){
+//            bottomText.setVisibility(View.GONE);
+//            nullText.setVisibility(View.INVISIBLE);
+//        }else{
+//            bottomText.setVisibility(View.INVISIBLE);
+//            nullText.setVisibility(View.GONE);
+//        }
 
         //observe : model의 LiveData를 관찰.
         viewModel.getAllFavorite().observe(this, new Observer<List<Favorite_Item>>() {

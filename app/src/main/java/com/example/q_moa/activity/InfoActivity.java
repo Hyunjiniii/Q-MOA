@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.icu.text.IDNA;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.q_moa.InfoAdapter;
 import com.example.q_moa.R;
-import com.example.q_moa.favorites.Room.FavoriteListAdapter;
 import com.example.q_moa.favorites.Room.FavoriteViewModel;
 import com.example.q_moa.favorites.Room.Favorite_Item;
 import com.google.firebase.auth.FirebaseAuth;
