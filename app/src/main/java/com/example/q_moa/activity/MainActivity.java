@@ -3,8 +3,6 @@ package com.example.q_moa.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,8 +22,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
-import com.example.q_moa.LocationActivity;
-import com.example.q_moa.LocationCheckActivity;
+import com.example.q_moa.location.LocationCheckActivity;
 import com.example.q_moa.R;
 import com.example.q_moa.favorites.FavoriteActivity;
 import com.example.q_moa.login.LoginActivity;
@@ -38,8 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;

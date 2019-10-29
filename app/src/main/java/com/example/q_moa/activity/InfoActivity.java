@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.q_moa.InfoAdapter;
+import com.example.q_moa.adapter.InfoAdapter;
 import com.example.q_moa.R;
 import com.example.q_moa.favorites.Room.FavoriteViewModel;
 import com.example.q_moa.favorites.Room.Favorite_Item;

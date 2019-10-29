@@ -23,10 +23,8 @@
 
     <string-array name="location_area_Daejeon">
         <item>군/구 선택</item>
-        <item>대덕구</item>
         <item>동구</item>
         <item>서구</item>
-        <item>유성구</item>
         <item>중구</item>
     </string-array>
     
