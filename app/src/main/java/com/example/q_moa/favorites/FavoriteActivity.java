@@ -71,13 +71,13 @@ public class FavoriteActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        int position = adapter.getItemCount();
-//        if(position == 0){
-//            bottomText.setVisibility(View.GONE);
-//            nullText.setVisibility(View.INVISIBLE);
-//        }else{
+//        int position = adapter.getItemCount();
+//        if (position != 0) {
 //            bottomText.setVisibility(View.INVISIBLE);
 //            nullText.setVisibility(View.GONE);
+//        } else {
+//            bottomText.setVisibility(View.GONE);
+//            nullText.setVisibility(View.INVISIBLE);
 //        }
 
         //observe : model의 LiveData를 관찰.

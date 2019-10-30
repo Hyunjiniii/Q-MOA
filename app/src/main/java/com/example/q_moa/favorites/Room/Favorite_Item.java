@@ -27,8 +27,8 @@ public class Favorite_Item {
 
     public Favorite_Item(@NonNull String favorite_time, String favorite_text1, String favorite_text2) {
         this.time = favorite_time;
-        this.text1 = "접수일 " + favorite_text1;
-        this.text2 = "합격일 " + favorite_text2;
+        this.text1 = favorite_text1;
+        this.text2 = favorite_text2;
     }
 
     public Favorite_Item(@NonNull String favorite_name, String series, String time, String favorite_text1, String favorite_text2) {

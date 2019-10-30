@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,8 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
         return mfavorite.get(position);
     }
 
+    public int getSize (){ return mfavorite.size();}
+
     @Override
     public int getItemCount() {
         if (mfavorite != null)
@@ -62,6 +65,7 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView name, text1, text2, bottomtext;
+        ImageView button;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,6 +73,8 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
             text1 = itemView.findViewById(R.id.tv_text1);
             text2 = itemView.findViewById(R.id.tv_text2);
             bottomtext = itemView.findViewById(R.id.bottomtext);
+            button = itemView.findViewById(R.id.unfavorite_btn);
+            button.setImageResource(R.drawable.favorite_ic);
 
         }
     }
