@@ -78,16 +78,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
-        Button btn_test = findViewById(R.id.btn_test);
-        btn_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LocationCheckActivity.class));
-
-            }
-        });
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
