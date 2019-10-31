@@ -5,13 +5,19 @@ public class TipItem {
     private String contents;
     private String like_result;
     private String date;
-    private String isLike;
-    private String isUnLike;
+    private boolean isLike;
+    private boolean isUnLike;
     private String unlike_result;
     private String certificate;
+    private String uid;
 
     TipItem() {
 
+    }
+
+    TipItem(boolean isLike, boolean isUnLike) {
+        this.isLike = isLike;
+        this.isUnLike = isUnLike;
     }
 
     TipItem(String nickname, String contents, String date, String certificate) {
@@ -21,22 +27,23 @@ public class TipItem {
         this.certificate = certificate;
     }
 
-    TipItem(String nickname, String contents, String date, String like_result, String unlike_result) {
+    TipItem(String nickname, String contents, String date, String like_result, String unlike_result, String uid) {
         this.nickname = nickname;
         this.contents = contents;
         this.like_result = like_result;
         this.unlike_result = unlike_result;
         this.date = date;
+        this.uid = uid;
     }
 
-    TipItem(String nickname, String contents, String date, String like_result, String unlike_result, String isLike, String isUnLike) {
+    TipItem(String nickname, String contents, String date, String like_result, String unlike_result, boolean isLike, boolean isUnLike) {
         this.nickname = nickname;
         this.contents = contents;
         this.like_result = like_result;
         this.unlike_result = unlike_result;
+        this.date = date;
         this.isLike = isLike;
         this.isUnLike = isUnLike;
-        this.date = date;
     }
 
     public String getNickname() {
@@ -59,15 +66,19 @@ public class TipItem {
         return unlike_result;
     }
 
-    public String getIsLike() {
+    public String getCertificate() {
+        return certificate;
+    }
+
+    public boolean isLike() {
         return isLike;
     }
 
-    public String getIsUnLike() {
+    public boolean isUnLike() {
         return isUnLike;
     }
 
-    public String getCertificate() {
-        return certificate;
+    public String getUid() {
+        return uid;
     }
 }
