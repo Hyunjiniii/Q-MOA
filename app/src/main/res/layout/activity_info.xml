@@ -206,7 +206,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/info_tip_recyclerview"
                         android:layout_width="match_parent"
-                        android:layout_height="340dp"
+                        android:layout_height="wrap_content"
                         android:visibility="gone" />
 
                     <TextView
