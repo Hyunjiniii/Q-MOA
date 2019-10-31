@@ -223,27 +223,25 @@
 
                 </FrameLayout>
 
+                <Button
+                    android:id="@+id/write_tip_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="28dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="28dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/write_tip_button"
+                    android:gravity="center"
+                    android:text="Tip 작성하기"
+                    android:textColor="@color/point_color"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
             </LinearLayout>
 
         </ScrollView>
-
-
-        <Button
-            android:id="@+id/write_tip_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="28dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginRight="28dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/write_tip_button"
-            android:gravity="center"
-            android:text="Tip 작성하기"
-            android:textColor="@color/point_color"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
 
     </RelativeLayout>
 

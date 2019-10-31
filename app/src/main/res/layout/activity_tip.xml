@@ -7,40 +7,67 @@
     tools:context=".activity.TipActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="3dp"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:paddingBottom="3dp">
 
             <androidx.appcompat.widget.Toolbar
-                android:elevation="3dp"
                 android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:elevation="3dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Light"
                 app:contentInsetStart="0dp"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-                <ImageButton
-                    android:id="@+id/tip_back_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/back_arrow_ic"
-                    android:layout_marginStart="16dp"
-                    android:background="@null"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    android:layout_marginStart="20dp"
-                    android:text="Tip 작성"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <ImageButton
+                        android:id="@+id/tip_back_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:background="@null"
+                        android:src="@drawable/back_arrow_ic"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/text"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="Tip 작성"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/tip_back_btn"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tip_floating_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="완료"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.appcompat.widget.Toolbar>
 
         </RelativeLayout>
@@ -49,20 +76,12 @@
             android:id="@+id/tip_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="18dp"
-            android:textSize="16sp"
-            android:textColor="@color/black"
             android:gravity="start"
-            android:hint="내용을 입력해주세요."/>
+            android:hint="내용을 입력해주세요."
+            android:padding="18dp"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/tip_floating_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:backgroundTint="@color/point_color"
-        android:layout_margin="18dp"/>
 
 </FrameLayout>

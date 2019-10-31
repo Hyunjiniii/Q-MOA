@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.q_moa.R;
@@ -70,7 +71,7 @@ public class TipActivity extends AppCompatActivity {
         });
 
         // 완료버튼 클릭 시 Firebase에 데이터 업데이트
-        FloatingActionButton ok_button = (FloatingActionButton) findViewById(R.id.tip_floating_button);
+        TextView ok_button = (TextView) findViewById(R.id.tip_floating_button);
         ok_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
