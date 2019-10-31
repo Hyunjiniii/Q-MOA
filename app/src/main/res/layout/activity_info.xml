@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
@@ -51,10 +52,10 @@
             </androidx.appcompat.widget.Toolbar>
         </RelativeLayout>
 
-        <ScrollView
+        <com.example.q_moa.floatingactionbutton.FloatingScrollView
+            android:id="@+id/info_scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/write_tip_btn"
             android:layout_below="@id/toolbarlayout">
 
             <LinearLayout
@@ -71,10 +72,10 @@
                     android:id="@+id/info_main_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
                     android:text="자격증 이름"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:layout_marginBottom="12dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -228,9 +229,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="28dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginRight="28dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/write_tip_button"
                     android:gravity="center"
@@ -241,8 +240,16 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </com.example.q_moa.floatingactionbutton.FloatingScrollView>
 
     </RelativeLayout>
 
-</LinearLayout>
+    <com.example.q_moa.floatingactionbutton.FloatingActionButton
+        android:id="@+id/location_floating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:src="@drawable/location_fab"
+        android:layout_gravity="bottom|right"/>
+
+</FrameLayout>

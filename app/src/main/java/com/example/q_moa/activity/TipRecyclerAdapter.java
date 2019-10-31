@@ -134,6 +134,18 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
                         firebaseDatabase.child("UserReview").child(sub_name).child(series).child(item.getDate()).setValue(tipItem1);
                     }
                 });
+                holder.like_on_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "이미 좋아요를 누르셨습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                holder.unlike_on_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "이미 싫어요를 누르셨습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 holder.like_off_button.setOnClickListener(new View.OnClickListener() {
                     @Override

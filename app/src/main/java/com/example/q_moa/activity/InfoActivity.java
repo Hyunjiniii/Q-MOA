@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,9 @@ import com.example.q_moa.adapter.InfoAdapter;
 import com.example.q_moa.R;
 import com.example.q_moa.favorites.Room.FavoriteViewModel;
 import com.example.q_moa.favorites.Room.Favorite_Item;
+import com.example.q_moa.floatingactionbutton.FloatingActionButton;
+import com.example.q_moa.floatingactionbutton.FloatingScrollView;
+import com.example.q_moa.location.LocationCheckActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -119,6 +123,16 @@ public class InfoActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(InfoActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        FloatingScrollView scrollView = (FloatingScrollView) findViewById(R.id.info_scrollView);
+        com.example.q_moa.floatingactionbutton.FloatingActionButton location_button = (FloatingActionButton) findViewById(R.id.location_floating);
+        location_button.attachToScrollView(scrollView);
+        location_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), LocationCheckActivity.class));
             }
         });
 
