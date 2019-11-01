@@ -54,6 +54,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
                 intent.putExtra("certificate", names.get(position));
                 context.startActivity(intent);
 
+                Log.d("onCLick", names.get(position));
                 ArrayList<String> list = getStringArrayPref(context, "history_list");
                 if (list != null) {
                     for (int i = 0; i <= list.size(); i++) {
