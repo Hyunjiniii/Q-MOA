@@ -81,12 +81,12 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
             holder.contents.setText(item.getContents());
             holder.like_result.setText(item.getLike_result());
 
-            mlike_result = Integer.parseInt(item.getLike_result());
+            Log.d("like_result", String.valueOf(mlike_result));
 
             setButton(holder);
 
             if (uid != null) {
-                firebaseDatabase.child("UserReviewLike").child(sub_name).child(series).child(item.getContents().substring(0, 8)).child(uid).addValueEventListener(new ValueEventListener() {
+                firebaseDatabase.child("UserReviewLike").child(sub_name).child(series).child(item.getDate()).child(uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount() != 0) {
@@ -107,12 +107,14 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
                 holder.like_off_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        int mlike_result = Integer.parseInt(item.getLike_result());
                         mlike_result += 1;
+                        Log.d("like_result", String.valueOf(mlike_result));
                         setLikeOn(holder);
                         holder.like_result.setText(String.valueOf(mlike_result));
                         TipItem item1 = new TipItem(true);
                         TipItem tipItem1 = new TipItem(item.getNickname(), item.getContents(), item.getDate(), String.valueOf(mlike_result), uid);
-                        firebaseDatabase.child("UserReviewLike").child(sub_name).child(series).child(item.getContents().substring(0, 8)).child(uid).setValue(item1);
+                        firebaseDatabase.child("UserReviewLike").child(sub_name).child(series).child(item.getDate()).child(uid).setValue(item1);
                         firebaseDatabase.child("UserReview").child(sub_name).child(series).child(item.getDate()).setValue(tipItem1);
                     }
                 });
