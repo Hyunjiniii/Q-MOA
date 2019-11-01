@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -33,9 +34,8 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
     private String sub_name;
     private String series;
     private int mlike_result;
-    private int munlike_result;
+
     private boolean islike;
-    private boolean isunlike;
 
     TipRecyclerAdapter(List<TipItem> items, Context context) {
         this.items = items;
@@ -70,9 +70,7 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
         if (sub_name == null) {
             holder.certificate.setVisibility(View.VISIBLE);
             holder.like_result.setVisibility(View.GONE);
-            holder.unlike_off_button.setVisibility(View.GONE);
             holder.like_off_button.setVisibility(View.GONE);
-            holder.unlike_result.setVisibility(View.GONE);
             holder.certificate.setText(item.getCertificate());
             holder.nickname.setText(item.getNickname());
             holder.contents.setText(item.getContents());
@@ -82,10 +80,8 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
             holder.date.setText(time1);
             holder.contents.setText(item.getContents());
             holder.like_result.setText(item.getLike_result());
-            holder.unlike_result.setText(item.getUnlike_result());
 
             mlike_result = Integer.parseInt(item.getLike_result());
-            munlike_result = Integer.parseInt(item.getUnlike_result());
 
             setButton(holder);
 
@@ -95,11 +91,8 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount() != 0) {
                             islike = (boolean) dataSnapshot.child("like").getValue();
-                            isunlike = (boolean) dataSnapshot.child("unLike").getValue();
                             if (islike) {
                                 setLikeOn(holder);
-                            } else if (isunlike) {
-                                setUnLikeOn(holder);
                             }
                         }
 
@@ -110,26 +103,15 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
 
                     }
                 });
+
                 holder.like_off_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mlike_result += 1;
                         setLikeOn(holder);
                         holder.like_result.setText(String.valueOf(mlike_result));
-                        TipItem item1 = new TipItem(true, false);
-                        TipItem tipItem1 = new TipItem(item.getNickname(), item.getContents(), item.getDate(), String.valueOf(mlike_result), item.getUnlike_result(), uid);
-                        firebaseDatabase.child("UserReviewLike").child(sub_name).child(series).child(item.getContents()).child(uid).setValue(item1);
-                        firebaseDatabase.child("UserReview").child(sub_name).child(series).child(item.getDate()).setValue(tipItem1);
-                    }
-                });
-                holder.unlike_off_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        munlike_result += 1;
-                        setUnLikeOn(holder);
-                        holder.unlike_result.setText(String.valueOf(munlike_result));
-                        TipItem item1 = new TipItem(false, true);
-                        TipItem tipItem1 = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), String.valueOf(munlike_result), uid);
+                        TipItem item1 = new TipItem(true);
+                        TipItem tipItem1 = new TipItem(item.getNickname(), item.getContents(), item.getDate(), String.valueOf(mlike_result), uid);
                         firebaseDatabase.child("UserReviewLike").child(sub_name).child(series).child(item.getContents()).child(uid).setValue(item1);
                         firebaseDatabase.child("UserReview").child(sub_name).child(series).child(item.getDate()).setValue(tipItem1);
                     }
@@ -140,20 +122,8 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
                         Toast.makeText(context, "이미 좋아요를 누르셨습니다.", Toast.LENGTH_SHORT).show();
                     }
                 });
-                holder.unlike_on_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(context, "이미 싫어요를 누르셨습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                });
             } else {
                 holder.like_off_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(context, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                holder.unlike_off_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(context, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
@@ -175,12 +145,9 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
         TextView nickname;
         TextView contents;
         TextView like_result;
-        TextView unlike_result;
         TextView date;
         ImageView like_on_button;
         ImageView like_off_button;
-        ImageView unlike_on_button;
-        ImageView unlike_off_button;
 
         MyViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -188,12 +155,9 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
             nickname = (TextView) itemView.findViewById(R.id.tip_item_nickname);
             contents = (TextView) itemView.findViewById(R.id.tip_item_contents);
             like_result = (TextView) itemView.findViewById(R.id.tip_like_result);
-            unlike_result = (TextView) itemView.findViewById(R.id.tip_unlike_result);
             date = (TextView) itemView.findViewById(R.id.tip_item_date);
             like_on_button = (ImageView) itemView.findViewById(R.id.tip_like_on_button);
             like_off_button = (ImageView) itemView.findViewById(R.id.tip_like_off_button);
-            unlike_on_button = (ImageView) itemView.findViewById(R.id.tip_unlike_on_button);
-            unlike_off_button = (ImageView) itemView.findViewById(R.id.tip_unlike_off_button);
         }
     }
 
@@ -202,7 +166,6 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
             uid = firebaseUser.getUid();
 
         if (uid == null) {
-            holder.unlike_off_button.setEnabled(false);
             holder.like_off_button.setEnabled(false);
         }
     }
@@ -210,13 +173,7 @@ public class TipRecyclerAdapter extends RecyclerView.Adapter<TipRecyclerAdapter.
     private void setLikeOn(MyViewHolder holder) {
         holder.like_on_button.setVisibility(View.VISIBLE);
         holder.like_off_button.setVisibility(View.GONE);
-        holder.unlike_off_button.setEnabled(false);
     }
 
-    private void setUnLikeOn(MyViewHolder holder) {
-        holder.unlike_on_button.setVisibility(View.VISIBLE);
-        holder.unlike_off_button.setVisibility(View.GONE);
-        holder.like_off_button.setEnabled(false);
-    }
 
 }

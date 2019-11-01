@@ -6,8 +6,6 @@ public class TipItem {
     private String like_result;
     private String date;
     private boolean isLike;
-    private boolean isUnLike;
-    private String unlike_result;
     private String certificate;
     private String uid;
 
@@ -15,9 +13,8 @@ public class TipItem {
 
     }
 
-    TipItem(boolean isLike, boolean isUnLike) {
+    TipItem(boolean isLike) {
         this.isLike = isLike;
-        this.isUnLike = isUnLike;
     }
 
     TipItem(String nickname, String contents, String date, String certificate) {
@@ -27,23 +24,20 @@ public class TipItem {
         this.certificate = certificate;
     }
 
-    TipItem(String nickname, String contents, String date, String like_result, String unlike_result, String uid) {
+    TipItem(String nickname, String contents, String date, String like_result, String uid) {
         this.nickname = nickname;
         this.contents = contents;
         this.like_result = like_result;
-        this.unlike_result = unlike_result;
         this.date = date;
         this.uid = uid;
     }
 
-    TipItem(String nickname, String contents, String date, String like_result, String unlike_result, boolean isLike, boolean isUnLike) {
+    TipItem(String nickname, String contents, String date, String like_result, boolean isLike) {
         this.nickname = nickname;
         this.contents = contents;
         this.like_result = like_result;
-        this.unlike_result = unlike_result;
         this.date = date;
         this.isLike = isLike;
-        this.isUnLike = isUnLike;
     }
 
     public String getNickname() {
@@ -62,9 +56,6 @@ public class TipItem {
         return like_result;
     }
 
-    public String getUnlike_result() {
-        return unlike_result;
-    }
 
     public String getCertificate() {
         return certificate;
@@ -72,10 +63,6 @@ public class TipItem {
 
     public boolean isLike() {
         return isLike;
-    }
-
-    public boolean isUnLike() {
-        return isUnLike;
     }
 
     public String getUid() {

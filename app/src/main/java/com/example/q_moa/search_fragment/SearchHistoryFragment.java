@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +34,13 @@ public class SearchHistoryFragment extends Fragment {
 
         int[] text_id = {R.id.search_history_text1, R.id.search_history_text2, R.id.search_history_text3, R.id.search_history_text4, R.id.search_history_text5};
 
-        for (int i = 0; i <= 4; i++)
+        for (int i = 0; i <= 4; i++) {
             textView[i] = (TextView) rootView.findViewById(text_id[i]);
+            textView[i].setSingleLine(true);
+            textView[i].setEllipsize(TextUtils.TruncateAt.END);
+            textView[i].setSelected(true);
+        }
+
 
         ArrayList<String> list = getStringArrayPref(getContext(), "history_list");
         if (list != null) {

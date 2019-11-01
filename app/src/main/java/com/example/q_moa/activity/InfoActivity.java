@@ -165,7 +165,7 @@ public class InfoActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 TipItem item = dataSnapshot.getValue(TipItem.class);
-                TipItem data = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), item.getUnlike_result(), item.getUid());
+                TipItem data = new TipItem(item.getNickname(), item.getContents(), item.getDate(), item.getLike_result(), item.getUid());
                 items.add(data);
                 tipRecyclerAdapter.notifyDataSetChanged();
                 tip_size_text.setVisibility(View.VISIBLE);
