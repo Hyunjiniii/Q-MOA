@@ -87,7 +87,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
                             Favorite_Item itemData = new Favorite_Item("[" + series + "] ", sub_name, item.getTime(), item.getText1(), item.getText2());
 
-                            //unfavorite_btn.setImageResource(R.drawable.ic_grade_black_24dp);
+                           unfavorite_btn.setImageResource(R.drawable.ic_grade_black_24dp);
 
                             viewModel.insert(itemData);
 
@@ -95,7 +95,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
                         } else if (uid != null && bo == true) {
 
-                           // unfavorite_btn.setImageResource(R.drawable.unfavorite_icon);
+                          unfavorite_btn.setImageResource(R.drawable.unfavorite_icon);
                             Favorite_Item itemData = new Favorite_Item("[" + series + "] ", sub_name, item.getTime(), item.getText1(), item.getText2());
 
                             viewModel.delete(itemData);

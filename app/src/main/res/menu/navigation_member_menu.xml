@@ -6,7 +6,7 @@
         android:title="홈"/>
     <item
         android:id="@+id/favorites"
-        android:icon="@drawable/favorite_ic"
+        android:icon="@drawable/unfavorite_icon"
         android:title="자격증 즐겨찾기"/>
     <item
         android:id="@+id/mytip"
