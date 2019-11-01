@@ -74,7 +74,7 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
             text2 = itemView.findViewById(R.id.tv_text2);
             bottomtext = itemView.findViewById(R.id.bottomtext);
             button = itemView.findViewById(R.id.unfavorite_btn);
-            button.setImageResource(R.drawable.ic_grade_black_24dp);
+          //  button.setImageResource(R.drawable.ic_grade_black_24dp);
 
         }
     }
